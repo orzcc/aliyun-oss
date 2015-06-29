@@ -274,7 +274,8 @@ class AliyunOssAdapter extends AbstractAdapter
     public function getSize($path)
     {
         $object = $this->getObject($path);
-        return $this->getContentLength($object);
+        //return $this->getContentLength($object);
+        return ['size' => $object->getContentLength()];
     }
 
     /**
