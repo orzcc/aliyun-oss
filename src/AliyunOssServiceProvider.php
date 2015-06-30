@@ -12,11 +12,15 @@ class AliyunOssServiceProvider extends ServiceProvider {
     {
         Storage::extend('oss', function($app, $config)
         {
-            $client = OSSClient::factory(array(
+            $ossconfig = [
                 'AccessKeyId'       => $config['access_id'],
-                'AccessKeySecret'   => $config['access_key'],
-                'Endpoint'          => $config['endpoint']
-            ));
+                'AccessKeySecret'   => $config['access_key']
+            ];
+
+            if (isset($config['Endpoint']) && !empty($config['Endpoint']))
+                $ossconfig['Endpoint'] = $config['endpoint'];
+
+            $client = OSSClient::factory($ossconfig);
 
             return new Filesystem(new AliyunOssAdapter($client, $config['bucket'], $config['prefix']));
         });

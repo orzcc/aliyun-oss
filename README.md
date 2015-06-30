@@ -24,11 +24,10 @@ add a disk config to the config
 ```bash
 'oss' => [
     'driver'        => 'oss',
-    'endpoint'      => env('OSS_ENDPOINT'),
-    'access_id'     => env('OSS_ACCESS_KEY'),
-    'access_key'    => env('OSS_ACCESS_SECRET'),
-    'bucket'        => env('OSS_DEFAULT_BUCKET'),
-    'prefix'        => '' // Path prefix, default can keep empty
+	'access_id'    	=> 'Your oss access id',
+	'access_key' 	=> 'Your oss access key',
+	'bucket' 	    => 'Your project bucket on oss',
+	'endpoint'    	=> '' // 青岛节点需要指定，杭州节点不需要
 ],
 ```
 
