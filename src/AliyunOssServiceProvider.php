@@ -14,7 +14,8 @@ class AliyunOssServiceProvider extends ServiceProvider {
         {
             $client = OSSClient::factory(array(
                 'AccessKeyId'       => $config['access_id'],
-                'AccessKeySecret'   => $config['access_key']
+                'AccessKeySecret'   => $config['access_key'],
+                'Endpoint'          => $config['endpoint']
             ));
 
             return new Filesystem(new AliyunOssAdapter($client, $config['bucket'], $config['prefix']));

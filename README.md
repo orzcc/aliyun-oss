@@ -23,10 +23,11 @@ At last, you can edit the config file: config/filesystem.php.
 add a disk config to the config
 ```bash
 'oss' => [
-	'driver'        => 'oss',
-	'access_id'    	=> 'Your oss access id',
-	'access_key' 	=> 'Your oss access key',
-	'bucket' 	    => 'Your project bucket on oss',
+    'driver'        => 'oss',
+    'endpoint'      => env('OSS_ENDPOINT'),
+    'access_id'     => env('OSS_ACCESS_KEY'),
+    'access_key'    => env('OSS_ACCESS_SECRET'),
+    'bucket'        => env('OSS_DEFAULT_BUCKET'),
     'prefix'        => '' // Path prefix, default can keep empty
 ],
 ```
