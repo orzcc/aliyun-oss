@@ -17,7 +17,7 @@ class AliyunOssServiceProvider extends ServiceProvider {
                 'AccessKeySecret'   => $config['access_key']
             ];
 
-            if (isset($config['Endpoint']) && !empty($config['Endpoint']))
+            if (isset($config['endpoint']) && !empty($config['endpoint']))
                 $ossconfig['Endpoint'] = $config['endpoint'];
 
             $client = OSSClient::factory($ossconfig);
