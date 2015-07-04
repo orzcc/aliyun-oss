@@ -113,7 +113,7 @@ class AliyunOssAdapter extends AbstractAdapter
             $config
         );
 
-        if($this->client->putObject($options) === false) {var_dump(11);exit;
+        if($this->client->putObject($options) === false) {
             return false;
         }
         return true;
