@@ -316,7 +316,7 @@ class AliyunOssAdapter extends AbstractAdapter
     public function getTimestamp($path)
     {
         $object = $this->getObject($path);
-        return $this->getLastModified($object)->getTimestamp();
+        return $object->getLastModified() ? $object->getLastModified()->getTimestamp() : null;
     }
 
     /**
@@ -392,7 +392,7 @@ class AliyunOssAdapter extends AbstractAdapter
             'type'      => 'file',
             'dirname'   => Util::dirname($name),
             'path'      => $name,
-            'timestamp' => $object->getLastModified()->getTimestamp(),
+            'timestamp' => $object->getLastModified() ? $object->getLastModified()->getTimestamp() : null,
             'mimetype'  => reset($mimetype),
             'size'      => $object->getContentLength(),
         ];
