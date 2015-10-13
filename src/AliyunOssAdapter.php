@@ -3,7 +3,7 @@
 use Aliyun\OSS\OSSClient;
 use Aliyun\OSS\Models\OSSObject;
 use Aliyun\OSS\Exceptions\OSSException;
-use Aliyun\OSS\Exceptions\ClientException;
+use Aliyun\Common\Exceptions\ClientException;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
