@@ -113,10 +113,16 @@ class AliyunOssAdapter extends AbstractAdapter
             $config
         );
 
-        if($this->client->putObject($options) === false) {
+        try {
+            if($this->client->putObject($options) === false) {
+                return false;
+            }
+            return true;
+        } catch (OSSException $e) {
+            return false;
+        } catch (ClientException $e) {
             return false;
         }
-        return true;
     }
 
     /**
@@ -134,11 +140,16 @@ class AliyunOssAdapter extends AbstractAdapter
             $config
         );
 
-        if($this->client->putObject($options) === false) {
+        try {
+            if($this->client->putObject($options) === false) {
+                return false;
+            }
+            return true;
+        } catch (OSSException $e) {
+            return false;
+        } catch (ClientException $e) {
             return false;
         }
-
-        return true;
     }
 
     /**
@@ -199,9 +210,16 @@ class AliyunOssAdapter extends AbstractAdapter
             'DestBucket'    => $this->bucket,
             'DestKey'       => $this->applyPathPrefix($newpath)
         ];
-        $this->client->copyObject($options);
-        $this->delete($path);
-        return true;
+
+        try {
+            $this->client->copyObject($options);
+            $this->delete($path);
+            return true;
+        } catch (OSSException $e) {
+            return false;
+        } catch (ClientException $e) {
+            return false;
+        }
     }
 
     /**
@@ -215,8 +233,15 @@ class AliyunOssAdapter extends AbstractAdapter
             'DestBucket'    => $this->bucket,
             'DestKey'       => $this->applyPathPrefix($newpath)
         ];
-        $this->client->copyObject($options);
-        return true;
+
+        try {
+            $this->client->copyObject($options);
+            return true;
+        } catch (OSSException $e) {
+            return false;
+        } catch (ClientException $e) {
+            return false;
+        }
     }
 
     /**
@@ -225,8 +250,15 @@ class AliyunOssAdapter extends AbstractAdapter
     public function delete($path)
     {
         $options = $this->getOptions($path);
-        $this->client->deleteObject($options);
-        return ! $this->has($path);
+
+        try {
+            $this->client->deleteObject($options);
+            return ! $this->has($path);
+        } catch (OSSException $e) {
+            return false;
+        } catch (ClientException $e) {
+            return false;
+        }
     }
 
     /**
@@ -317,24 +349,30 @@ class AliyunOssAdapter extends AbstractAdapter
         $response = [];
         $marker = null;
         $location = $this->applyPathPrefix($directory);
-        while(true) {
-            $objectList = $this->client->listObjects(['Bucket' => $this->bucket, 'Prefix' => $location, 'Marker' => $marker, 'MaxKeys' => 100]);
-            $objectSummarys = $objectList->getObjectSummarys();
-            if (!$objectSummarys || count($objectSummarys) === 0) {
-                break;
-            }
-            foreach($objectSummarys as $summary) {
-                if($summary) {
-                    $object = $this->getObject($this->removePathPrefix($summary->getKey()));
-                    if(!$object) {
-                        continue;
+        try {
+            while(true) {
+                $objectList = $this->client->listObjects(['Bucket' => $this->bucket, 'Prefix' => $location, 'Marker' => $marker, 'MaxKeys' => 100]);
+                $objectSummarys = $objectList->getObjectSummarys();
+                if (!$objectSummarys || count($objectSummarys) === 0) {
+                    break;
+                }
+                foreach($objectSummarys as $summary) {
+                    if($summary) {
+                        $object = $this->getObject($this->removePathPrefix($summary->getKey()));
+                        if(!$object) {
+                            continue;
+                        }
+                        $response[] = $object;
+                        $marker = $object->getKey();
                     }
-                    $response[] = $object;
-                    $marker = $object->getKey();
                 }
             }
+            return Util::emulateDirectories(array_map([$this, 'normalizeObject'], $response));
+        } catch (OSSException $e) {
+            return false;
+        } catch (ClientException $e) {
+            return false;
         }
-        return Util::emulateDirectories(array_map([$this, 'normalizeObject'], $response));
     }
 
     /**
